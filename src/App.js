@@ -38,15 +38,15 @@ function App() {
 
   useEffect(() => {
     if (isError)
-      return toast.error("Something when wrong 😣", {
+      toast.error("Something when wrong 😭", {
         position: "bottom-center",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
-        draggable: false,
+        draggable: true,
         progress: undefined,
-        theme: "ligth"
+        theme: "light"
       });
   }, [isError]);
 

@@ -11,15 +11,17 @@ root.render(
     <App />
     <ToastContainer
       position="bottom-center"
-      autoClose={2000}
+      autoClose={5000}
       hideProgressBar={false}
       newestOnTop
       closeOnClick
       rtl={false}
       pauseOnFocusLoss={false}
       draggable={false}
-      pauseOnHover
-      theme="colored"
+      pauseOnHover={false}
+      theme="dark"
     />
+    {/* Same as */}
+    <ToastContainer />
   </React.StrictMode>
 );
