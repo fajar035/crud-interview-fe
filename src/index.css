@@ -1,13 +1,113 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  --bg-primary: #ffffe8;
+  --text-color: #473c33;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Nunito";
+  background-color: var(--bg-primary);
+}
+
+.App {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.App > h1 {
+  color: var(--text-color);
+}
+
+.section-user {
+  width: 70%;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 5px;
+}
+
+.wrapper-card {
+  width: 250px;
+  height: 200px;
+  border: 1px solid #aacb73;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin: 10px;
+}
+
+.wrapper-card > p {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.wrapper-name {
+  position: absolute;
+  padding: 0 20px;
+  height: 50px;
+  bottom: -25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wrapper-name > p {
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.wrapper-img {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  border-radius: 50%;
+  margin-bottom: 30px;
+}
+
+.img-user {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wrapper-btn {
+  display: flex;
+  align-items: center;
+}
+
+.wrapper-btn > p {
+  font-size: 20px;
+}
+
+.wrapper-btn > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.wrapper-btn > button:hover .icon-btn {
+  color: #aacb73;
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  color: var(--text-color);
+}
+
+.wrapper-input {
+  margin: 10px 0;
 }
