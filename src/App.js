@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { useCallback, useEffect, useState } from "react";
-import { getUsers } from "./https/users";
+import { getUsers, addUser, deleteUser, updateUser } from "./https/users";
 import CardUser from "./components/CardUser";
+import IsNull from "./components/IsNull";
 import { Puff } from "react-loader-spinner";
 import { toast } from "react-toastify";
 import {
@@ -14,6 +15,7 @@ function App() {
   const [meta, setMeta] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const [isNull, setIsNull] = useState(false);
   const [params] = useState({
     search: "",
     page: 1,
@@ -22,19 +24,60 @@ function App() {
     by: "" // email / fullname
   });
 
-  useEffect(() => {
-    async function getAllUsers() {
-      try {
-        const res = await getUsers(params);
+  const getAllUsers = useCallback(() => {
+    getUsers(params)
+      .then((res) => {
         setUsers(res.data.data.result);
         setMeta(res.data.data.meta);
         setIsLoading(false);
-      } catch {
-        setIsError(true);
-      }
-    }
+      })
+      .catch((err) => {
+        if (err.response.data.data) {
+          const error = err.response.data.data.result.Message;
+          console.log(error);
+          if (error === "Data not found") {
+            setIsNull(true);
+            setIsLoading(false);
+            return setIsError(false);
+          }
+          setIsError(true);
+        }
+        if (err.response.status === 500) return setIsError(true);
+      });
+  }, [users]);
+
+  const handleDelete = (id) => {
+    deleteUser(id)
+      .then(() => {
+        return toast.success("Successfully delete data 😊", {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light"
+        });
+      })
+      .catch((err) => {
+        if (err)
+          return toast.error("Something when wrong 😭", {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light"
+          });
+      });
+  };
+
+  useEffect(() => {
     getAllUsers();
-  }, [setIsLoading]);
+  }, [getAllUsers]);
 
   useEffect(() => {
     if (isError)
@@ -63,20 +106,22 @@ function App() {
               secondaryColor="#4fa94d"
               radius="12.5"
               ariaLabel="mutating-dots-loading"
-              wrapperStyle={{}}
-              wrapperClass=""
               visible={true}
             />
-          ) : (
+          ) : !isNull ? (
             users.map((item, idx) => {
               return (
                 <CardUser
                   key={idx}
+                  id={item.id}
                   email={item.email}
                   fullname={item.fullname}
+                  handleDelete={handleDelete}
                 />
               );
             })
+          ) : (
+            <IsNull />
           )}
         </section>
         <div className="wrapper-input">

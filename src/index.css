@@ -1,6 +1,7 @@
 :root {
   --bg-primary: #ffffe8;
   --text-color: #473c33;
+  --color-delete: #f55050;
 }
 
 * {
@@ -81,6 +82,17 @@
   object-fit: cover;
 }
 
+.icon-delete {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.icon-delete:hover {
+  color: var(--color-delete);
+}
+
 .wrapper-btn {
   display: flex;
   align-items: center;
@@ -111,6 +123,43 @@
 
 .wrapper-input {
   margin: 10px 0;
+  width: 200px;
+  height: 30px;
+}
+
+.wrapper-input > input {
+  width: 100%;
+  height: 100%;
+  padding: 0 10px;
+  color: var(--text-color);
+  font-family: "Nunito";
+  font-weight: 600;
+  border: none;
+  background-color: #e8e2e2;
+  border-radius: 5px;
+}
+
+.wrapper-input > input:focus {
+  outline: 1px solid #aacb73;
+}
+
+.wrapper-null {
+  width: 50%;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.wrapper-null > h1 {
+  font-family: "Nunito";
+  font-size: 35px;
+  margin-bottom: 50px;
+  color: var(--text-color);
 }
 
 /* RESPONSIVE */
