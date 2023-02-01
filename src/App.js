@@ -33,8 +33,8 @@ function App() {
     search: "",
     page: 1,
     limit: 5,
-    sort: "", // asc / desc
-    by: "" // email / fullname
+    sort: "", // email / fullname
+    by: "asc" // asc / desc
   });
   const [pagination, setPaginations] = useState({
     next: null,
@@ -189,7 +189,6 @@ function App() {
     setIsLoading(true);
     const { next, prev } = meta;
     setPaginations({ prev, next });
-    const test = Math.ceil(meta.totalPage / params.page);
     setParams({ ...params, page: params.page + 1 });
     if (next) {
       getUsers(next)
@@ -214,7 +213,6 @@ function App() {
     setIsLoading(true);
     const { next, prev } = meta;
     setPaginations({ prev, next });
-    const test = Math.ceil(meta.totalPage / params.page);
     setParams({ ...params, page: params.page - 1 });
     if (prev) {
       getUsers(prev)
@@ -236,8 +234,8 @@ function App() {
   };
 
   useEffect(() => {
-    getAllUsersApi();
-  }, []);
+    getAllUsersApi(params);
+  }, [params]);
 
   useEffect(() => {
     if (isError)
@@ -273,7 +271,24 @@ function App() {
             Add User
           </button>
         </div>
-        <button>Filter</button>
+        <div className="wrapper-filter">
+          <select
+            value={params.sort}
+            onChange={(e) => setParams({ ...params, sort: e.target.value })}
+          >
+            <option value="" disabled>
+              Filter
+            </option>
+            <option value="email">Email</option>
+            <option value="fullname">Fullname</option>
+          </select>
+          <button
+            className="btn-filter"
+            onClick={() => setParams({ ...params, sort: "" })}
+          >
+            Clear Filter
+          </button>
+        </div>
         <div className="wrapper-btn">
           <button
             onClick={handlePrev}

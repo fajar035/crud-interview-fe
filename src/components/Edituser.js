@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 function EditUser(props) {
@@ -22,6 +22,10 @@ function EditUser(props) {
       });
     updateUser(body, dataUser.id);
   };
+
+  useEffect(() => {
+    setBody({ email: dataUser.email, fullname: dataUser.fullname });
+  }, [dataUser]);
 
   return (
     <div className="section-adduser">
