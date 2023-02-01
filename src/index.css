@@ -24,12 +24,12 @@
 
 .App > h1 {
   color: var(--text-color);
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
 
 .section-user {
   width: 90%;
-  /* height: 500px; */
+  height: 300px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -135,9 +135,17 @@
   color: var(--text-color);
 }
 
+.disable-btn {
+  visibility: hidden;
+}
+
+.disable-btn:hover .icon-btn {
+  color: #473c33 !important;
+}
+
 .wrapper-input {
   margin: 10px 0;
-  width: 300px;
+  width: 400px;
   height: 30px;
   display: flex;
   justify-content: space-between;
@@ -158,6 +166,7 @@
 
 .wrapper-input > button {
   height: 100%;
+
   padding: 0 10px;
   border-radius: 5px;
   border: none;
@@ -165,6 +174,26 @@
   font-family: "Nunito";
   font-weight: 600;
   cursor: pointer;
+  margin: 0 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-add {
+  width: 100px;
+  height: 100%;
+  padding: 0 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #aacb73;
+  font-family: "Nunito";
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .wrapper-input > input:focus {

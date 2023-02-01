@@ -36,11 +36,16 @@ function App() {
     sort: "", // asc / desc
     by: "" // email / fullname
   });
+  const [pagination, setPaginations] = useState({
+    next: null,
+    prev: null
+  });
 
   const getAllUsersApi = async () => {
     try {
       const res = await getUsers(params);
       setUsers(res.data.data.result);
+      setMeta(res.data.data.meta);
       setIsLoading(false);
       setIsError(false);
       setIsNull(false);
@@ -180,6 +185,58 @@ function App() {
     getAllUsersApi(params);
   };
 
+  const handleNext = () => {
+    setIsLoading(true);
+    const { next, prev } = meta;
+    setPaginations({ prev, next });
+    const test = Math.ceil(meta.totalPage / params.page);
+    setParams({ ...params, page: test });
+    if (next) {
+      getUsers(next)
+        .then((res) => {
+          console.log("res next : ", res);
+          setUsers(res.data.data.result);
+          setMeta(res.data.data.meta);
+          setIsLoading(false);
+          setIsError(false);
+          setIsNull(false);
+        })
+        .catch((err) => {
+          setIsError(false);
+          setIsLoading(false);
+          if (err.response.status === 404) {
+            setIsNull(true);
+          }
+        });
+    }
+  };
+
+  const handlePrev = () => {
+    setIsLoading(true);
+    const { next, prev } = meta;
+    setPaginations({ prev, next });
+    const test = Math.ceil(meta.totalPage / params.page);
+    setParams({ ...params, page: test });
+    if (prev) {
+      getUsers(prev)
+        .then((res) => {
+          console.log("res prev : ", res);
+          setUsers(res.data.data.result);
+          setMeta(res.data.data.meta);
+          setIsLoading(false);
+          setIsError(false);
+          setIsNull(false);
+        })
+        .catch((err) => {
+          setIsError(false);
+          setIsLoading(false);
+          if (err.response.status === 404) {
+            setIsNull(true);
+          }
+        });
+    }
+  };
+
   useEffect(() => {
     getAllUsersApi();
   }, []);
@@ -199,7 +256,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log(params.search);
     if (params.search.length === 0) {
       getAllUsersApi();
     }
@@ -215,16 +271,26 @@ function App() {
             onChange={(e) => handleSearchInput(e)}
           />
           <button onClick={handleSearch}>Search</button>
+          <button className="btn-add" onClick={handleAdd}>
+            Add User
+          </button>
         </div>
         <div className="wrapper-btn">
-          <button>
+          <button
+            onClick={handlePrev}
+            className={!meta.prev ? "disable-btn" : ""}
+          >
             <UilArrowCircleLeft className="icon-btn" />
           </button>
           <p>{params.page}</p>
-          <button>
+          <button
+            onClick={handleNext}
+            className={!meta.next ? "disable-btn" : ""}
+          >
             <UilArrowCircleRight className="icon-btn" />
           </button>
         </div>
+        <p>Total Page : {meta.totalPage}</p>
         <section className="section-user">
           {isLoading ? (
             <Puff
