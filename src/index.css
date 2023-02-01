@@ -354,6 +354,13 @@ input:focus + label {
   background-color: #f48484;
 }
 
+.wrapper-info-page {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 220px;
+}
+
 /* RESPONSIVE */
 
 @media screen and (max-width: 500px) {

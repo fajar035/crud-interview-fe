@@ -290,7 +290,11 @@ function App() {
             <UilArrowCircleRight className="icon-btn" />
           </button>
         </div>
-        <p>Total Page : {meta.totalPage}</p>
+        <div className="wrapper-info-page">
+          <p>Total Page : {meta.totalPage}</p>
+          <p>|</p>
+          <p>Total Data : {meta.count}</p>
+        </div>
         <section className="section-user">
           {isLoading ? (
             <Puff
