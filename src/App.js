@@ -1,22 +1,35 @@
 /* eslint-disable no-unused-vars */
-import { useCallback, useEffect, useState } from "react";
-import { getUsers, addUser, deleteUser, updateUser } from "./https/users";
+import { useEffect, useState } from "react";
+import {
+  getUsers,
+  addUser,
+  deleteUser,
+  updateUser,
+  getUserById
+} from "./https/users";
 import CardUser from "./components/CardUser";
+import AddUser from "./components/AddUser";
 import IsNull from "./components/IsNull";
 import { Puff } from "react-loader-spinner";
 import { toast } from "react-toastify";
+
 import {
   UilArrowCircleRight,
   UilArrowCircleLeft
 } from "@iconscout/react-unicons";
+import EditUser from "./components/Edituser";
 
 function App() {
   const [users, setUsers] = useState([]);
+  const [userId, setUserId] = useState({});
   const [meta, setMeta] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [isNull, setIsNull] = useState(false);
-  const [params] = useState({
+  const [openAddUser, setOpenAddUser] = useState(false);
+  const [openEditUser, setOpenEditUser] = useState(false);
+  const [onBlur, setOnBlur] = useState(false);
+  const [params, setParams] = useState({
     search: "",
     page: 1,
     limit: 5,
@@ -24,31 +37,98 @@ function App() {
     by: "" // email / fullname
   });
 
-  const getAllUsers = useCallback(() => {
-    getUsers(params)
-      .then((res) => {
-        setUsers(res.data.data.result);
-        setMeta(res.data.data.meta);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        if (err.response.data.data) {
-          const error = err.response.data.data.result.Message;
-          console.log(error);
-          if (error === "Data not found") {
-            setIsNull(true);
-            setIsLoading(false);
-            return setIsError(false);
-          }
-          setIsError(true);
-        }
-        if (err.response.status === 500) return setIsError(true);
+  const getAllUsersApi = async () => {
+    try {
+      const res = await getUsers(params);
+      setUsers(res.data.data.result);
+      setIsLoading(false);
+      setIsError(false);
+      setIsNull(false);
+    } catch (err) {
+      setIsError(false);
+      setIsLoading(false);
+      if (err.response.status === 404) {
+        setIsNull(true);
+      }
+    }
+  };
+
+  const addUserApi = async (body) => {
+    try {
+      const res = await addUser(body);
+      setOnBlur(false);
+      setOpenAddUser(false);
+      getAllUsersApi();
+      return toast.success("Successfully add user 😍", {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light"
       });
-  }, [users]);
+    } catch (err) {
+      if (err)
+        return toast.error("User already exist 😭", {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light"
+        });
+    }
+  };
+
+  const updateUserApi = async (body, id) => {
+    try {
+      const res = await updateUser(body, id);
+      setOnBlur(false);
+      setOpenEditUser(false);
+      getAllUsersApi();
+      return toast.success("Successfully update user 😍", {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light"
+      });
+    } catch (err) {
+      if (err)
+        return toast.error("User already exist 😭", {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light"
+        });
+    }
+  };
+
+  const getUserByIdApi = async (id) => {
+    try {
+      const res = await getUserById(id);
+      const data = res.data.data[0];
+      setUserId(data);
+    } catch (err) {
+      setIsError(true);
+    }
+  };
 
   const handleDelete = (id) => {
     deleteUser(id)
       .then(() => {
+        getAllUsersApi();
         return toast.success("Successfully delete data 😊", {
           position: "bottom-center",
           autoClose: 5000,
@@ -75,13 +155,38 @@ function App() {
       });
   };
 
+  const handleEdit = (id) => {
+    setOnBlur(true);
+    setOpenEditUser(true);
+    getUserByIdApi(id);
+  };
+
+  const handleAdd = () => {
+    setOnBlur(true);
+    setOpenAddUser(true);
+  };
+
+  const handleClose = () => {
+    setOnBlur(false);
+    setOpenAddUser(false);
+    setOpenEditUser(false);
+  };
+
+  const handleSearchInput = (e) => {
+    setParams({ ...params, search: e.target.value });
+  };
+
+  const handleSearch = () => {
+    getAllUsersApi(params);
+  };
+
   useEffect(() => {
-    getAllUsers();
-  }, [getAllUsers]);
+    getAllUsersApi();
+  }, []);
 
   useEffect(() => {
     if (isError)
-      toast.error("Something when wrong 😭", {
+      return toast.error("Something when wrong 😭", {
         position: "bottom-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -91,12 +196,35 @@ function App() {
         progress: undefined,
         theme: "light"
       });
-  }, [isError]);
+  }, []);
+
+  useEffect(() => {
+    console.log(params.search);
+    if (params.search.length === 0) {
+      getAllUsersApi();
+    }
+  }, [params.search]);
 
   return (
     <>
-      <div className="App">
+      <div className={`App ${onBlur ? "blur-bg" : ""}`}>
         <h1>App CRUD Users</h1>
+        <div className="wrapper-input">
+          <input
+            placeholder="Search Users .."
+            onChange={(e) => handleSearchInput(e)}
+          />
+          <button onClick={handleSearch}>Search</button>
+        </div>
+        <div className="wrapper-btn">
+          <button>
+            <UilArrowCircleLeft className="icon-btn" />
+          </button>
+          <p>{params.page}</p>
+          <button>
+            <UilArrowCircleRight className="icon-btn" />
+          </button>
+        </div>
         <section className="section-user">
           {isLoading ? (
             <Puff
@@ -117,26 +245,25 @@ function App() {
                   email={item.email}
                   fullname={item.fullname}
                   handleDelete={handleDelete}
+                  handleEdit={handleEdit}
                 />
               );
             })
           ) : (
-            <IsNull />
+            <IsNull onClick={handleAdd} />
           )}
         </section>
-        <div className="wrapper-input">
-          <input placeholder="Search Users .." />
-        </div>
-        <div className="wrapper-btn">
-          <button>
-            <UilArrowCircleLeft className="icon-btn" />
-          </button>
-          <p>{params.page}</p>
-          <button>
-            <UilArrowCircleRight className="icon-btn" />
-          </button>
-        </div>
       </div>
+      {/* MODAL */}
+      {openAddUser ? (
+        <AddUser handleClose={handleClose} addUserApi={addUserApi} />
+      ) : openEditUser ? (
+        <EditUser
+          handleClose={handleClose}
+          updateUser={updateUserApi}
+          dataUser={userId}
+        />
+      ) : null}
     </>
   );
 }

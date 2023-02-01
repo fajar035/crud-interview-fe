@@ -1,7 +1,7 @@
 import imageDefault from "../assets/Images/photo-profile-default.webp";
-import { UilTrashAlt } from "@iconscout/react-unicons";
+import { UilTrashAlt, UilPen } from "@iconscout/react-unicons";
 
-function CardUser({ id, email, fullname, handleDelete }) {
+function CardUser({ id, email, fullname, handleDelete, handleEdit }) {
   return (
     <div className="wrapper-card">
       <div className="wrapper-img">
@@ -11,6 +11,7 @@ function CardUser({ id, email, fullname, handleDelete }) {
       <div className="wrapper-name">
         <p>{fullname}</p>
       </div>
+      <UilPen className="icon-edit" onClick={() => handleEdit(id)} />
       <UilTrashAlt className="icon-delete" onClick={() => handleDelete(id)} />
     </div>
   );

@@ -1,7 +1,13 @@
 import axios from "axios";
 
-export const getUsers = ({ search, sort, by, page, limit }) => {
-  const url = `${process.env.REACT_APP_HOST}api/users?search=${search}&sort=${sort}&by=${by}&page=${page}&limit=${limit}`;
+export const getUsers = (props) => {
+  const params = new URLSearchParams(props).toString();
+  const url = `${process.env.REACT_APP_HOST}api/users?${params}`;
+  return axios.get(url);
+};
+
+export const getUserById = (id) => {
+  const url = `${process.env.REACT_APP_HOST}api/users/${id}`;
   return axios.get(url);
 };
 
