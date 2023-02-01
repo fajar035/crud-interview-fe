@@ -190,11 +190,10 @@ function App() {
     const { next, prev } = meta;
     setPaginations({ prev, next });
     const test = Math.ceil(meta.totalPage / params.page);
-    setParams({ ...params, page: test });
+    setParams({ ...params, page: params.page + 1 });
     if (next) {
       getUsers(next)
         .then((res) => {
-          console.log("res next : ", res);
           setUsers(res.data.data.result);
           setMeta(res.data.data.meta);
           setIsLoading(false);
@@ -216,11 +215,10 @@ function App() {
     const { next, prev } = meta;
     setPaginations({ prev, next });
     const test = Math.ceil(meta.totalPage / params.page);
-    setParams({ ...params, page: test });
+    setParams({ ...params, page: params.page - 1 });
     if (prev) {
       getUsers(prev)
         .then((res) => {
-          console.log("res prev : ", res);
           setUsers(res.data.data.result);
           setMeta(res.data.data.meta);
           setIsLoading(false);
@@ -264,7 +262,7 @@ function App() {
   return (
     <>
       <div className={`App ${onBlur ? "blur-bg" : ""}`}>
-        <h1>App CRUD Users</h1>
+        <h2>App CRUD Users</h2>
         <div className="wrapper-input">
           <input
             placeholder="Search Users .."
@@ -275,6 +273,7 @@ function App() {
             Add User
           </button>
         </div>
+        <button>Filter</button>
         <div className="wrapper-btn">
           <button
             onClick={handlePrev}
@@ -305,6 +304,7 @@ function App() {
               radius="12.5"
               ariaLabel="mutating-dots-loading"
               visible={true}
+              wrapperClass="loading"
             />
           ) : !isNull ? (
             users.map((item, idx) => {

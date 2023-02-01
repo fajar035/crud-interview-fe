@@ -22,9 +22,10 @@
   position: relative;
 }
 
-.App > h1 {
+.App > h2 {
   color: var(--text-color);
-  margin-bottom: 30px;
+  margin-bottom: 10px;
+  margin: 10px 0;
 }
 
 .section-user {
@@ -369,10 +370,14 @@ input:focus + label {
   }
 
   .section-user {
-    height: auto;
+    height: 300px;
   }
 
   .wrapper-input {
     margin-top: 50px;
+  }
+
+  .loading {
+    margin-top: 20px;
   }
 }
